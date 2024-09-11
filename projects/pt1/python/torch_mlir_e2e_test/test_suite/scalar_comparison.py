@@ -233,7 +233,7 @@ class CountNonzeroModuleI64(torch.nn.Module):
 
 @register_test_case(module_factory=lambda: CountNonzeroModuleI64())
 def CountNonzeroModuleI64_basic(module, tu: TestUtils):
-    module.forward(tu.randint(2, 3, 4).to(torch.int64))
+    module.forward(tu.randint(2, 3, 4, low=-2, high=2).to(torch.int64))
 
 
 class CountNonzeroDimIntListModuleF32(torch.nn.Module):
