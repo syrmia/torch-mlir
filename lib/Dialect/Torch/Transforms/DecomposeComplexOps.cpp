@@ -5237,8 +5237,10 @@ public:
         rewriter.create<AtenGtScalarOp>(loc, boolTensorType, self, cstZero);
     auto negativeMap =
         rewriter.create<AtenLtScalarOp>(loc, boolTensorType, self, cstZero);
-    auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
-        loc, inputType, positiveMap, negativeMap, cstZero);
+    // auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
+    //     loc, inputType, positiveMap, negativeMap, cstZero);
+    auto sumPositiveNegativeMap = rewriter.create<AtenLogicalOrOp>(
+        loc, boolTensorType, positiveMap, negativeMap);
 
     auto none = rewriter.create<ConstantNoneOp>(loc);
     Value cstFalse = rewriter.create<Torch::ConstantBoolOp>(loc, false);
@@ -5295,8 +5297,10 @@ public:
     auto negativeMap =
         rewriter.create<AtenLtScalarOp>(loc, boolTensorType, self, cstZero);
 
-    auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
-        loc, inputType, positiveMap, negativeMap, cstZero);
+    // auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
+    //     loc, inputType, positiveMap, negativeMap, cstZero);
+    auto sumPositiveNegativeMap = rewriter.create<AtenLogicalOrOp>(
+        loc, boolTensorType, positiveMap, negativeMap);
 
     auto none = rewriter.create<ConstantNoneOp>(loc);
     Value cstFalse = rewriter.create<Torch::ConstantBoolOp>(loc, false);
