@@ -5296,6 +5296,7 @@ def Torch_AtenCountNonzeroOp : Torch_Op<"aten.count_nonzero", [
       printDefaultTorchOp(printer, *this, 2, 1);
     }
   }];
+  let hasVerifier = 1;
 }
 
 def Torch_AtenCountNonzeroDimIntListOp : Torch_Op<"aten.count_nonzero.dim_IntList", [
@@ -5320,6 +5321,7 @@ def Torch_AtenCountNonzeroDimIntListOp : Torch_Op<"aten.count_nonzero.dim_IntLis
       printDefaultTorchOp(printer, *this, 2, 1);
     }
   }];
+  let hasVerifier = 1;
 }
 
 def Torch_AtenUnbindCopyIntOp : Torch_Op<"aten.unbind_copy.int", [

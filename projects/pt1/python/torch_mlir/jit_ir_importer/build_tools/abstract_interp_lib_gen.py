@@ -141,7 +141,7 @@ def aten〇diagonal〡shape(self: List[int], offset: int = 0, dim1: int = 0, dim
 ])
 def aten〇count_nonzero〡shape(self: List[int], dim: Optional[int] = None) -> List[int]:
     if dim is None: return []
-    assert not (dim <-len(self) or dim>= len(self))
+    assert not (dim < -len(self) or dim >= len(self))
     return upstream_shape_functions.argmax(self, dim, False)
 
 
@@ -157,6 +157,9 @@ def aten〇count_nonzero〡shape(self: List[int], dim: Optional[int] = None) -> 
     ErrorInvocation(TensorOfShape(2, 3, 4), dim=[3]), # `dim` out of bounds.
 ])
 def aten〇count_nonzero〇dim_IntList〡shape(self: List[int], dim: List[int]) -> List[int]:
+    if dim is None: return []
+    for d in dim:
+        assert not (d < -len(self) or d >= len(self))
     return upstream_shape_functions.sum_mean_dim(self, dim,False,0)
 
 def aten〇fake_quantize_per_tensor_affine〡shape(self: List[int], scale: float, zero_point: int, quant_min: int, quant_max: int) -> List[int]:
