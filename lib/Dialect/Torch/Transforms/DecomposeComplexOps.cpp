@@ -5206,10 +5206,8 @@ public:
 
 // Decompose aten.count_nonzero
 //  Decomposing:
-//    1) use AtenGtScalarOp to deduce >0 elements :x1
-//    2) use AtenLtScalarOp to deduce <0 elements :x2
-//    3) use AtenAddTensorOp to sum x1 + x2 :x3
-//    4) use AtenSumOp to sum x3 along given dim :x4-result
+//    1) use AtenNeScalarOp to compare elementwise with 0 scalar
+//    4) use AtenSumOp to sum along given dim
 namespace {
 class DecomposeAtenCountNonzeroOp
     : public OpRewritePattern<AtenCountNonzeroOp> {
@@ -5233,15 +5231,6 @@ public:
 
     auto cstZero =
         rewriter.create<ConstantIntOp>(loc, rewriter.getI64IntegerAttr(0));
-    // auto positiveMap =
-    //     rewriter.create<AtenGtScalarOp>(loc, boolTensorType, self, cstZero);
-    // auto negativeMap =
-    //     rewriter.create<AtenLtScalarOp>(loc, boolTensorType, self, cstZero);
-    // auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
-    //     loc, inputType, positiveMap, negativeMap, cstZero);
-    // auto sumPositiveNegativeMap = rewriter.create<AtenLogicalOrOp>(
-    //     loc, boolTensorType, positiveMap, negativeMap);
-    // AtenNeScalarOp
     auto sumPositiveNegativeMap =
         rewriter.create<AtenNeScalarOp>(loc, boolTensorType, self, cstZero);
     auto none = rewriter.create<ConstantNoneOp>(loc);
@@ -5264,6 +5253,10 @@ public:
 };
 } // namespace
 
+// Decompose aten.count_nonzero.dim_IntList
+//  Decomposing:
+//    1) use AtenNeScalarOp to compare elementwise with 0 scalar
+//    4) use AtenSumDimIntListOp to sum along given dim_IntList
 namespace {
 class DecomposeAtenCountNonzeroDimIntListOp
     : public OpRewritePattern<AtenCountNonzeroDimIntListOp> {
@@ -5294,15 +5287,6 @@ public:
 
     auto cstZero =
         rewriter.create<ConstantIntOp>(loc, rewriter.getI64IntegerAttr(0));
-    // auto positiveMap =
-    //     rewriter.create<AtenGtScalarOp>(loc, boolTensorType, self, cstZero);
-    // auto negativeMap =
-    //     rewriter.create<AtenLtScalarOp>(loc, boolTensorType, self, cstZero);
-
-    // auto sumPositiveNegativeMap = rewriter.create<AtenAddTensorOp>(
-    //     loc, inputType, positiveMap, negativeMap, cstZero);
-    // auto sumPositiveNegativeMap = rewriter.create<AtenLogicalOrOp>(
-    //     loc, boolTensorType, positiveMap, negativeMap);
     auto sumPositiveNegativeMap =
         rewriter.create<AtenNeScalarOp>(loc, boolTensorType, self, cstZero);
     auto none = rewriter.create<ConstantNoneOp>(loc);
